@@ -1,18 +1,37 @@
+import time
+
 import functions_framework
 
+
+# Placeholder
+def heavy_computation():
+    return time.time()
+
+
+# Placeholder
+def light_computation():
+    return time.time()
+
+
+# Global (instance-wide) scope
+# This computation runs at instance cold-start
+instance_var = heavy_computation()
+
+
 @functions_framework.http
-def hello_get(request):
-    """HTTP Cloud Function.
+def scope_demo(request):
+    """
+    HTTP Cloud Function that declares a variable.
     Args:
         request (flask.Request): The request object.
-        <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
-    Note:
-        For more information on how Flask integrates with Cloud
-        Functions, see the `Writing HTTP functions` page.
-        <https://cloud.google.com/functions/docs/writing/http#http_frameworks>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    return 'Hello World!'
+
+    # Per-function scope
+    # This computation runs every time this function is called
+    function_var = light_computation()
+    return 'Instance: {}; function: {}'.format(instance_var, function_var)
